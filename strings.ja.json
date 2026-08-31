@@ -23,7 +23,7 @@
   "next.shortBreak": "休憩を開始 →",
   "next.longBreak": "長めの休憩を開始 →",
 
-  "notify.workDoneTitle": "集中セッション終了",
+  "notify.workDoneTitle": "セッション終了",
   "notify.workDoneBody": "おつかれさま。少し休憩しましょう。",
   "notify.shortBreakDoneTitle": "休憩終了",
   "notify.shortBreakDoneBody": "準備ができたら再開しましょう。",

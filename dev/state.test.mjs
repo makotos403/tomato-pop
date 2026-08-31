@@ -85,6 +85,18 @@ test("SELECT_PHASE switches and resets to full", () => {
   assert.equal(remainingMs(s), 15 * 60_000);
 });
 
+test("END_SESSION stops, clears the round, returns to a fresh Pomodoro", () => {
+  const running = {
+    ...INITIAL_STATE, phase: "shortBreak", status: "running", endTime: T0, round: 2,
+  };
+  const { state, effects } = reduce(running, S, { type: "END_SESSION" }, T0);
+  assert.equal(state.phase, "pomodoro");
+  assert.equal(state.status, "idle");
+  assert.equal(state.round, 0);
+  assert.equal(state.remainingMs, 25 * 60_000);
+  assert.ok(effects.some((e) => e.type === "clearAlarm"));
+});
+
 test("completedToday rolls over on a new day", () => {
   const day1 = { ...INITIAL_STATE, phase: "pomodoro", status: "running", endTime: T0,
     completedToday: 3, today: "2023-11-14" };

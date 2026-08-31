@@ -88,6 +88,25 @@ export function reduce(state, settings, event, now = Date.now()) {
       };
     }
 
+    // "I'm done for now": stop, clear the round count, back to a fresh Pomodoro.
+    case "END_SESSION": {
+      return {
+        state: {
+          ...state,
+          phase: "pomodoro",
+          status: "idle",
+          endTime: null,
+          remainingMs: phaseDurationMs("pomodoro", settings),
+          round: 0,
+        },
+        effects: [
+          { type: "clearAlarm" },
+          { type: "stopBadgeTicks" },
+          { type: "updateBadge" },
+        ],
+      };
+    }
+
     case "PHASE_END": {
       const finished = state.phase;
       const today = localDay(now);

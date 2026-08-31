@@ -3,7 +3,7 @@
 // `endTime` in storage plus a chrome.alarms deadline are the real clock.
 
 import { INITIAL_STATE, DEFAULT_SETTINGS } from "./defaults.js";
-import { reduce, remainingMs } from "./state.js";
+import { reduce, remainingMs, phaseDurationMs } from "./state.js";
 import { getT } from "./i18n.js";
 
 const ALARM_PHASE_END = "phaseEnd";
@@ -142,25 +142,28 @@ const DONE_KEYS = {
   longBreak: ["notify.longBreakDoneTitle", "notify.longBreakDoneBody"],
 };
 
+const NOTIFICATION_ID = "tp-phase-end";
+
 async function notify(finished, next, settings) {
   const t = await getT(settings.language);
   const [titleKey, bodyKey] = DONE_KEYS[finished];
   const startBtn =
     next === "pomodoro" ? t("notify.btnStartFocus") : t("notify.btnStartBreak");
 
-  await chrome.notifications.create(`tp-${Date.now()}`, {
+  await chrome.notifications.clear(NOTIFICATION_ID); // replace any previous one
+  await chrome.notifications.create(NOTIFICATION_ID, {
     type: "basic",
     iconUrl: chrome.runtime.getURL("icons/icon128.png"),
     title: t(titleKey),
     message: t(bodyKey),
-    buttons: [{ title: startBtn }],
+    buttons: [{ title: startBtn }, { title: t("notify.btnEnd") }],
     requireInteraction: true,
-    silent: settings.sound !== "system",
+    silent: settings.sound !== "system", // OS plays its sound only in "system" mode
   });
 }
 
-chrome.notifications.onButtonClicked.addListener(async (id) => {
-  await dispatch({ type: "START" });
+chrome.notifications.onButtonClicked.addListener(async (id, buttonIndex) => {
+  await dispatch({ type: buttonIndex === 1 ? "END_SESSION" : "START" });
   chrome.notifications.clear(id);
 });
 
@@ -188,8 +191,9 @@ async function ensureOffscreen() {
 
 async function playChime(volume) {
   await ensureOffscreen();
-  // The offscreen doc may not have wired its listener on the very first call.
-  for (let i = 0; i < 3; i++) {
+  // Chrome reaps an idle AUDIO_PLAYBACK offscreen doc, so at phase end it is
+  // usually freshly (re)created here — retry until its listener is wired.
+  for (let i = 0; i < 8; i++) {
     try {
       const res = await chrome.runtime.sendMessage({
         target: "offscreen",
@@ -200,7 +204,7 @@ async function playChime(volume) {
     } catch (_) {
       /* no receiver yet */
     }
-    await new Promise((r) => setTimeout(r, 120));
+    await new Promise((r) => setTimeout(r, 200));
   }
 }
 
@@ -209,15 +213,15 @@ async function playSound(settings) {
   await playChime(settings.volume ?? 0.5);
 }
 
-// --- in-page alert: slide-in banner + tab-title flash ----------------
-// Both live in content.js, injected on demand. They need the optional
-// scripting + host permission; without it we silently rely on the OS
+// --- in-page slide-in banner ----------------------------------------
+// Lives in content.js, injected on demand into the active tab. Needs the
+// optional scripting + host permission; without it we rely on the OS
 // notification (which always fires).
 
 const HOST_PERM = { permissions: ["scripting"], origins: ["*://*/*"] };
 
 async function alertActiveTab(finished, next, settings) {
-  if (!settings.flashTab && !settings.inPageBanner) return;
+  if (!settings.inPageBanner) return;
   if (!(await chrome.permissions.contains(HOST_PERM))) return;
 
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
@@ -227,19 +231,17 @@ async function alertActiveTab(finished, next, settings) {
   const [titleKey, bodyKey] = DONE_KEYS[finished];
   const payload = {
     type: "TP_ALERT",
-    flash: settings.flashTab ? { label: t("flash.title") } : null,
-    banner: settings.inPageBanner
-      ? {
-          kind: finished,
-          title: t(titleKey),
-          body: t(bodyKey),
-          cta:
-            next === "pomodoro"
-              ? t("notify.btnStartFocus")
-              : t("notify.btnStartBreak"),
-          dismiss: t("notify.dismiss"),
-        }
-      : null,
+    banner: {
+      kind: finished,
+      title: t(titleKey),
+      body: t(bodyKey),
+      cta:
+        next === "pomodoro"
+          ? t("notify.btnStartFocus")
+          : t("notify.btnStartBreak"),
+      end: t("notify.btnEnd"),
+      dismiss: t("notify.dismiss"),
+    },
   };
 
   try {
@@ -293,6 +295,15 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       case "SET_SETTINGS": {
         const merged = { ...(await loadSettings()), ...msg.patch };
         await chrome.storage.local.set({ settings: merged });
+        // If the timer is idle, keep its shown duration in step with the new
+        // settings right away (not only on the next Start).
+        const st = await loadState();
+        if (st.status === "idle") {
+          const full = phaseDurationMs(st.phase, merged);
+          if (st.remainingMs !== full) {
+            await chrome.storage.local.set({ state: { ...st, remainingMs: full } });
+          }
+        }
         sendResponse({ settings: merged });
         break;
       }

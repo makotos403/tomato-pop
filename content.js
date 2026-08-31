@@ -1,6 +1,7 @@
 // Injected on demand by background.js when a phase ends (needs the optional
-// scripting + host permission). Shows a slide-in banner and/or flashes the tab
-// title. The banner lives in a shadow root so the page's CSS can't touch it.
+// scripting + host permission). Shows a slide-in banner at the top of the page.
+// It lives in a shadow root so the page's CSS can't touch it, and the host is
+// pinned with position:fixed + the max z-index so page content can't cover it.
 
 if (!window.__tomatoPopReady) {
   window.__tomatoPopReady = true;
@@ -8,9 +9,7 @@ if (!window.__tomatoPopReady) {
   const HOST_ID = "__tomato-pop-banner";
 
   chrome.runtime.onMessage.addListener((msg) => {
-    if (msg?.type !== "TP_ALERT") return;
-    if (msg.banner) showBanner(msg.banner);
-    if (msg.flash) flashTitle(msg.flash.label);
+    if (msg?.type === "TP_ALERT" && msg.banner) showBanner(msg.banner);
   });
 
   function showBanner(b) {
@@ -25,10 +24,18 @@ if (!window.__tomatoPopReady) {
     const root = host.attachShadow({ mode: "open" });
     root.innerHTML = `
       <style>
-        :host { all: initial; }
+        :host {
+          all: initial;
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          z-index: 2147483647 !important;
+          pointer-events: none;
+        }
         .wrap {
-          position: fixed; top: 12px; left: 50%;
-          transform: translate(-50%, calc(-100% - 24px));
+          pointer-events: auto;
+          margin: 12px auto 0;
           width: min(400px, calc(100vw - 24px));
           display: flex; gap: 12px; align-items: flex-start;
           padding: 14px 14px 14px 16px;
@@ -37,27 +44,34 @@ if (!window.__tomatoPopReady) {
           border-radius: 12px;
           box-shadow: 0 8px 30px rgba(0, 0, 0, .18);
           font-family: system-ui, -apple-system, "Segoe UI", "Yu Gothic UI", Meiryo, sans-serif;
-          z-index: 2147483647;
+          transform: translateY(calc(-100% - 24px));
           transition: transform .38s cubic-bezier(.2, .9, .3, 1);
         }
-        .wrap.in { transform: translate(-50%, 0); }
+        .wrap.in { transform: translateY(0); }
         .text { flex: 1; min-width: 0; }
         .title { font-size: 14px; font-weight: 700; }
         .body { font-size: 12px; color: #8a817b; margin-top: 2px; }
-        .cta {
-          margin-top: 10px; padding: 7px 14px;
+        .actions { display: flex; gap: 8px; margin-top: 10px; justify-content: space-between; }
+        .btn {
+          padding: 7px 14px;
           border: 0; border-radius: 8px; cursor: pointer;
-          background: #3a3330; color: #fbf7f2;
           font: inherit; font-size: 12px; font-weight: 600;
+        }
+        .cta { background: #3a3330; color: #fbf7f2; }
+        .end {
+          background: transparent; color: #3a3330;
+          border: 1px solid #ded5cd;
         }
         .close {
           border: 0; background: transparent; cursor: pointer;
           color: #8a817b; font-size: 18px; line-height: 1; padding: 0 2px;
+          align-self: flex-start;
         }
         @media (prefers-color-scheme: dark) {
           .wrap { background: #2a2422; color: #ede4dc; box-shadow: 0 8px 30px rgba(0, 0, 0, .5); }
           .body { color: #a79e97; }
           .cta { background: #ede4dc; color: #2a2422; }
+          .end { color: #ede4dc; border-color: #4a403b; }
           .close { color: #a79e97; }
         }
       </style>
@@ -65,7 +79,10 @@ if (!window.__tomatoPopReady) {
         <div class="text">
           <div class="title"></div>
           <div class="body"></div>
-          <button class="cta"></button>
+          <div class="actions">
+            <button class="btn cta"></button>
+            <button class="btn end"></button>
+          </div>
         </div>
         <button class="close" aria-label="close">&times;</button>
       </div>
@@ -73,9 +90,10 @@ if (!window.__tomatoPopReady) {
     root.querySelector(".title").textContent = b.title;
     root.querySelector(".body").textContent = b.body;
     root.querySelector(".cta").textContent = b.cta;
+    root.querySelector(".end").textContent = b.end;
     root.querySelector(".close").setAttribute("aria-label", b.dismiss || "close");
 
-    (document.body || document.documentElement).appendChild(host);
+    document.documentElement.appendChild(host);
     const wrap = root.querySelector(".wrap");
     requestAnimationFrame(() => wrap.classList.add("in"));
 
@@ -91,33 +109,11 @@ if (!window.__tomatoPopReady) {
       chrome.runtime.sendMessage({ type: "EVENT", event: { type: "START" } });
       dismiss();
     });
+    root.querySelector(".end").addEventListener("click", () => {
+      chrome.runtime.sendMessage({ type: "EVENT", event: { type: "END_SESSION" } });
+      dismiss();
+    });
     root.querySelector(".close").addEventListener("click", dismiss);
-    setTimeout(dismiss, 9000);
-  }
-
-  function flashTitle(label) {
-    if (window.__tomatoPopFlashStop) return; // already flashing
-    if (document.hasFocus()) return; // user is already on this tab
-
-    const original = document.title;
-    let on = false;
-    let ticks = 0;
-
-    const id = setInterval(() => {
-      on = !on;
-      ticks += 1;
-      document.title = on ? label : original;
-      if (ticks >= 20) stop();
-    }, 900);
-
-    function stop() {
-      clearInterval(id);
-      document.title = original;
-      window.removeEventListener("focus", stop);
-      window.__tomatoPopFlashStop = null;
-    }
-
-    window.__tomatoPopFlashStop = stop;
-    window.addEventListener("focus", stop);
+    // No auto-dismiss: the banner stays until the user acts.
   }
 }

@@ -31,13 +31,11 @@
   "notify.longBreakDoneBody": "Time for the next round.",
   "notify.btnStartBreak": "Start break",
   "notify.btnStartFocus": "Start Pomodoro",
+  "notify.btnEnd": "Done",
   "notify.dismiss": "Dismiss",
-
-  "flash.title": "⏰ Time's up",
 
   "settings.title": "Settings",
   "settings.saved": "Saved",
-  "settings.soundPreview": "Preview",
 
   "settings.durationsHeading": "Timers",
   "settings.workLen": "Pomodoro",
@@ -46,28 +44,24 @@
   "settings.longBreakInterval": "Rounds before a long break",
   "settings.minutes": "min",
 
-  "settings.notifyHeading": "Notifications",
-  "settings.sound": "Sound",
+  "settings.soundHeading": "Sound",
   "settings.soundSystem": "System sound",
   "settings.soundChime": "Soft chime",
   "settings.soundNone": "Silent",
   "settings.volume": "Volume",
-  "settings.flashTab": "Flash the browser tab",
+  "settings.soundPreview": "Preview",
+
+  "settings.screenHeading": "On-screen alert",
   "settings.inPageBanner": "Show a banner on the page",
-  "settings.permissionNote": "Tab flashing and the page banner need permission to access the page you're viewing.",
-  "settings.permissionRequestBtn": "Grant permission",
-  "settings.permissionGranted": "Granted",
+  "settings.permissionNote": "The banner needs permission to access the page you're viewing.",
 
   "settings.iconHeading": "Toolbar icon",
-  "settings.showBadge": "Show remaining minutes on the icon",
+  "settings.showBadge": "Show remaining time on the icon",
 
   "settings.languageHeading": "Language",
   "settings.langAuto": "Auto (match browser)",
   "settings.langJa": "日本語",
   "settings.langEn": "English",
 
-  "permission.prompt": "To flash the tab and show the in-page banner, allow access to the page you're viewing.",
-  "permission.allow": "Allow",
-  "permission.deny": "Not now",
   "permission.denied": "Without permission, you'll get system notifications only."
 }

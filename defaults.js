@@ -6,8 +6,7 @@ export const DEFAULT_SETTINGS = {
   longBreakInterval: 4, // pomodoros before a long break
   sound: "none", // "system" | "chime" | "none"
   volume: 0.5,
-  flashTab: false, // needs optional host permission
-  inPageBanner: false, // needs optional host permission
+  inPageBanner: false, // slide-in banner; needs optional host permission
   showBadge: true, // remaining minutes on the toolbar icon
   language: "auto", // "auto" | "ja" | "en"
 };

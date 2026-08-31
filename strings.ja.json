@@ -31,13 +31,11 @@
   "notify.longBreakDoneBody": "次のポモドーロを始めましょう。",
   "notify.btnStartBreak": "休憩を開始",
   "notify.btnStartFocus": "ポモドーロを開始",
+  "notify.btnEnd": "終了",
   "notify.dismiss": "閉じる",
-
-  "flash.title": "⏰ 時間です",
 
   "settings.title": "設定",
   "settings.saved": "保存しました",
-  "settings.soundPreview": "試聴",
 
   "settings.durationsHeading": "時間",
   "settings.workLen": "ポモドーロ",
@@ -46,28 +44,24 @@
   "settings.longBreakInterval": "長めの休憩までのポモドーロ数",
   "settings.minutes": "分",
 
-  "settings.notifyHeading": "通知",
-  "settings.sound": "音",
+  "settings.soundHeading": "音",
   "settings.soundSystem": "OS通知音",
   "settings.soundChime": "ソフトな1音",
   "settings.soundNone": "無音",
   "settings.volume": "音量",
-  "settings.flashTab": "タブを点滅させる",
+  "settings.soundPreview": "試聴",
+
+  "settings.screenHeading": "画面での通知",
   "settings.inPageBanner": "ページ内にバナーを表示",
-  "settings.permissionNote": "点滅とバナーには、表示中のページへのアクセス許可が必要です。",
-  "settings.permissionRequestBtn": "権限を許可",
-  "settings.permissionGranted": "許可済み",
+  "settings.permissionNote": "バナーの表示には、表示中のページへのアクセス許可が必要です。",
 
   "settings.iconHeading": "アイコン表示",
-  "settings.showBadge": "アイコンに残り時間（分）を表示",
+  "settings.showBadge": "アイコンに残り時間を表示",
 
   "settings.languageHeading": "言語",
   "settings.langAuto": "自動（ブラウザに合わせる）",
   "settings.langJa": "日本語",
   "settings.langEn": "English",
 
-  "permission.prompt": "タブの点滅とページ内バナーを使うには、表示中のページへのアクセスを許可してください。",
-  "permission.allow": "許可",
-  "permission.deny": "今はしない",
   "permission.denied": "権限がないため、OS通知のみで案内します。"
 }

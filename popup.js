@@ -3,7 +3,7 @@
 // the display locally while running, and sends events back.
 
 import { resolveLang, loadMessages, makeT } from "./i18n.js";
-import { initSettings, localizeSettings, fillSettings } from "./settings.js";
+import { initSettings, localizeSettings, openSettings } from "./settings.js";
 
 const PHASE_LABEL = {
   pomodoro: "phase.work",
@@ -136,11 +136,11 @@ async function relocalizeAll() {
 
 // --- view switching ---
 
-function showSettings() {
+async function showSettings() {
   stopTick();
   el.viewTimer.hidden = true;
   el.viewSettings.hidden = false;
-  fillSettings();
+  await openSettings();
 }
 
 function showTimer() {

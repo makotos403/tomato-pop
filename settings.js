@@ -3,7 +3,7 @@
 
 const $ = (id) => document.getElementById(id);
 
-// scripting + host access — needed for tab flashing and the in-page banner.
+// scripting + host access — needed for the in-page banner.
 const HOST_PERM = { permissions: ["scripting"], origins: ["*://*/*"] };
 
 let ctx; // { send, state: { settings, t }, relocalizeAll }
@@ -29,14 +29,14 @@ export function localizeSettings() {
     .querySelectorAll("[data-unit]")
     .forEach((e) => (e.textContent = t("settings.minutes")));
 
-  $("s-h-notify").textContent = t("settings.notifyHeading");
-  $("s-l-sound").textContent = t("settings.sound");
+  $("s-h-sound").textContent = t("settings.soundHeading");
   $("o-sound-system").textContent = t("settings.soundSystem");
   $("o-sound-chime").textContent = t("settings.soundChime");
   $("o-sound-none").textContent = t("settings.soundNone");
   $("s-l-volume").textContent = t("settings.volume");
   $("btn-preview").textContent = t("settings.soundPreview");
-  $("s-l-flashTab").textContent = t("settings.flashTab");
+
+  $("s-h-screen").textContent = t("settings.screenHeading");
   $("s-l-inPageBanner").textContent = t("settings.inPageBanner");
   $("perm-note").textContent = t("settings.permissionNote");
 
@@ -49,7 +49,18 @@ export function localizeSettings() {
   $("o-lang-en").textContent = t("settings.langEn");
 }
 
-export function fillSettings() {
+// Called every time the settings view is opened.
+export async function openSettings() {
+  // If the banner is on but the permission is gone (denied while the popup
+  // closed, or revoked in chrome://extensions), switch it back off.
+  const s = ctx.state.settings;
+  if (s.inPageBanner && !(await hasHostPerm())) {
+    await persist({ inPageBanner: false });
+  }
+  fillSettings();
+}
+
+function fillSettings() {
   const s = ctx.state.settings;
   $("dur-pomodoro").value = s.durations.pomodoro;
   $("dur-shortBreak").value = s.durations.shortBreak;
@@ -60,7 +71,6 @@ export function fillSettings() {
   $("volume").value = Math.round((s.volume ?? 0.5) * 100);
   $("volume-row").hidden = s.sound !== "chime";
 
-  $("flashTab").checked = s.flashTab;
   $("inPageBanner").checked = s.inPageBanner;
   $("showBadge").checked = s.showBadge;
 
@@ -70,9 +80,13 @@ export function fillSettings() {
 
 // --- persistence ---
 
-async function save(patch) {
+async function persist(patch) {
   const res = await ctx.send({ type: "SET_SETTINGS", patch });
   ctx.state.settings = res.settings;
+}
+
+async function save(patch) {
+  await persist(patch);
   flashSaved();
 }
 
@@ -91,10 +105,23 @@ function clampInt(value, min, max, fallback) {
   return Math.min(max, Math.max(min, n));
 }
 
-// --- permission toggles ---
+// --- banner permission toggle ---
 
-async function onPermToggle(key, checkbox) {
-  if (checkbox.checked) {
+async function hasHostPerm() {
+  try {
+    return await chrome.permissions.contains(HOST_PERM);
+  } catch (_) {
+    return false;
+  }
+}
+
+async function onBannerToggle(checkbox) {
+  const want = checkbox.checked;
+  // Save the intent first: the permission prompt can close the popup, and we
+  // want the checkbox that was clicked to stay on when it reopens.
+  await save({ inPageBanner: want });
+
+  if (want) {
     let granted = false;
     try {
       granted = await chrome.permissions.request(HOST_PERM);
@@ -103,18 +130,15 @@ async function onPermToggle(key, checkbox) {
     }
     if (!granted) {
       checkbox.checked = false;
+      await persist({ inPageBanner: false });
       const n = $("perm-note");
       n.textContent = ctx.state.t("permission.denied");
       setTimeout(
         () => (n.textContent = ctx.state.t("settings.permissionNote")),
         4000,
       );
-      return;
     }
-  }
-  await save({ [key]: checkbox.checked });
-  const s = ctx.state.settings;
-  if (!s.flashTab && !s.inPageBanner) {
+  } else {
     try {
       await chrome.permissions.remove(HOST_PERM);
     } catch (_) {
@@ -158,10 +182,7 @@ function wire() {
     ctx.send({ type: "PREVIEW_SOUND" }),
   );
 
-  $("flashTab").addEventListener("change", (e) => onPermToggle("flashTab", e.target));
-  $("inPageBanner").addEventListener("change", (e) =>
-    onPermToggle("inPageBanner", e.target),
-  );
+  $("inPageBanner").addEventListener("change", (e) => onBannerToggle(e.target));
   $("showBadge").addEventListener("change", () =>
     save({ showBadge: $("showBadge").checked }),
   );

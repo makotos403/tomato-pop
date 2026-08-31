@@ -3,6 +3,6 @@
     "message": "Tomato Pop"
   },
   "appDesc": {
-    "message": "A simple Pomodoro timer. When a session ends it slides a banner down from the top of the page and shows a notification. Pomodoro / short break / long break, all adjustable. English and Japanese."
+    "message": "Pomodoro focus timer. A banner slides down the page and the toolbar shows a live countdown when a session ends. EN & JA."
   }
 }

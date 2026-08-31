@@ -67,19 +67,25 @@
               <span class="s-unit" data-unit></span>
             </span>
           </label>
-          <label class="s-row inline">
-            <span id="s-l-longBreak"></span>
-            <span class="s-field">
-              <input type="number" id="dur-longBreak" min="1" max="180" />
-              <span class="s-unit" data-unit></span>
-            </span>
+          <label class="s-row check">
+            <input type="checkbox" id="longBreakEnabled" />
+            <span id="s-l-longBreakEnabled"></span>
           </label>
-          <label class="s-row inline">
-            <span id="s-l-interval"></span>
-            <span class="s-field">
-              <input type="number" id="interval" min="1" max="12" />
-            </span>
-          </label>
+          <fieldset class="s-fieldset" id="longBreak-fields">
+            <label class="s-row inline">
+              <span id="s-l-longBreak"></span>
+              <span class="s-field">
+                <input type="number" id="dur-longBreak" min="1" max="180" />
+                <span class="s-unit" data-unit></span>
+              </span>
+            </label>
+            <label class="s-row inline">
+              <span id="s-l-interval"></span>
+              <span class="s-field">
+                <input type="number" id="interval" min="1" max="12" />
+              </span>
+            </label>
+          </fieldset>
         </div>
 
         <div class="s-group">

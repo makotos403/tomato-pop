@@ -40,8 +40,9 @@
   "settings.durationsHeading": "時間",
   "settings.workLen": "ポモドーロ",
   "settings.shortBreakLen": "休憩",
+  "settings.longBreakEnabled": "長めの休憩を使う",
   "settings.longBreakLen": "長めの休憩",
-  "settings.longBreakInterval": "長めの休憩までのポモドーロ数",
+  "settings.longBreakInterval": "長めの休憩までの回数",
   "settings.minutes": "分",
 
   "settings.soundHeading": "音",

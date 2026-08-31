@@ -85,6 +85,25 @@ test("SELECT_PHASE switches and resets to full", () => {
   assert.equal(remainingMs(s), 15 * 60_000);
 });
 
+test("long break disabled: a finished pomodoro always leads to a short break", () => {
+  const off = { ...S, longBreakEnabled: false };
+  const running = {
+    ...INITIAL_STATE, phase: "pomodoro", status: "running", endTime: T0, round: 9,
+  };
+  const { state } = reduce(running, off, { type: "PHASE_END" }, T0);
+  assert.equal(state.phase, "shortBreak");
+});
+
+test("long break disabled: SELECT_PHASE longBreak is ignored", () => {
+  const off = { ...S, longBreakEnabled: false };
+  const { state, effects } = reduce(INITIAL_STATE, off, {
+    type: "SELECT_PHASE",
+    phase: "longBreak",
+  });
+  assert.equal(state.phase, "pomodoro");
+  assert.deepEqual(effects, []);
+});
+
 test("END_SESSION stops, clears the round, returns to a fresh Pomodoro", () => {
   const running = {
     ...INITIAL_STATE, phase: "shortBreak", status: "running", endTime: T0, round: 2,

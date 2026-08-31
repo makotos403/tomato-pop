@@ -23,6 +23,7 @@ export function localizeSettings() {
   $("s-h-durations").textContent = t("settings.durationsHeading");
   $("s-l-pomodoro").textContent = t("settings.workLen");
   $("s-l-shortBreak").textContent = t("settings.shortBreakLen");
+  $("s-l-longBreakEnabled").textContent = t("settings.longBreakEnabled");
   $("s-l-longBreak").textContent = t("settings.longBreakLen");
   $("s-l-interval").textContent = t("settings.longBreakInterval");
   document
@@ -66,6 +67,10 @@ function fillSettings() {
   $("dur-shortBreak").value = s.durations.shortBreak;
   $("dur-longBreak").value = s.durations.longBreak;
   $("interval").value = s.longBreakInterval;
+
+  const lbOn = s.longBreakEnabled !== false;
+  $("longBreakEnabled").checked = lbOn;
+  $("longBreak-fields").disabled = !lbOn;
 
   document.querySelector(`input[name=sound][value="${s.sound}"]`).checked = true;
   $("volume").value = Math.round((s.volume ?? 0.5) * 100);
@@ -167,6 +172,12 @@ function wire() {
     const v = clampInt($("interval").value, 1, 12, ctx.state.settings.longBreakInterval);
     $("interval").value = v;
     save({ longBreakInterval: v });
+  });
+
+  $("longBreakEnabled").addEventListener("change", () => {
+    const on = $("longBreakEnabled").checked;
+    $("longBreak-fields").disabled = !on;
+    save({ longBreakEnabled: on });
   });
 
   document.querySelectorAll("input[name=sound]").forEach((r) =>

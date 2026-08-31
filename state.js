@@ -6,6 +6,11 @@ import { DEFAULT_SETTINGS } from "./defaults.js";
 
 export const PHASES = ["pomodoro", "shortBreak", "longBreak"];
 
+/** Whether the long-break part of the cycle is in use (default: yes). */
+export function longBreakActive(settings) {
+  return settings?.longBreakEnabled !== false;
+}
+
 /** Full length of a phase in milliseconds. */
 export function phaseDurationMs(phase, settings) {
   const min = settings?.durations?.[phase] ?? DEFAULT_SETTINGS.durations[phase];
@@ -38,6 +43,9 @@ export function reduce(state, settings, event, now = Date.now()) {
   switch (event.type) {
     case "SELECT_PHASE": {
       if (!PHASES.includes(event.phase)) return { state, effects: [] };
+      if (event.phase === "longBreak" && !longBreakActive(settings)) {
+        return { state, effects: [] };
+      }
       const next = toIdle({ ...state, phase: event.phase }, settings);
       return {
         state: next,
@@ -117,7 +125,10 @@ export function reduce(state, settings, event, now = Date.now()) {
       if (finished === "pomodoro") {
         round += 1;
         completedToday += 1;
-        next = round >= settings.longBreakInterval ? "longBreak" : "shortBreak";
+        next =
+          longBreakActive(settings) && round >= settings.longBreakInterval
+            ? "longBreak"
+            : "shortBreak";
       } else {
         if (finished === "longBreak") round = 0;
         next = "pomodoro";

@@ -20,6 +20,7 @@ const el = {
   viewTimer: document.getElementById("view-timer"),
   viewSettings: document.getElementById("view-settings"),
   tabs: document.querySelectorAll(".tab"),
+  tabLongBreak: document.getElementById("tab-longBreak"),
   time: document.getElementById("time"),
   progress: document.querySelector(".ring-progress"),
   dots: document.getElementById("dots"),
@@ -65,15 +66,25 @@ function renderStatic(state) {
     tab.classList.toggle("is-active", phase === state.phase);
   });
 
-  const total = shared.settings.longBreakInterval;
-  const done = Math.min(state.round, total);
-  el.dots.replaceChildren(
-    ...Array.from({ length: total }, (_, i) => {
-      const d = document.createElement("span");
-      d.className = "dot" + (i < done ? " is-done" : "");
-      return d;
-    }),
-  );
+  // Long break off: hide its tab and the "progress to a long break" dots.
+  // Keep the tab while a long break is somehow still the active phase.
+  const lbOn = shared.settings.longBreakEnabled !== false;
+  el.tabLongBreak.hidden = !lbOn && state.phase !== "longBreak";
+  el.dots.hidden = !lbOn;
+
+  if (lbOn) {
+    const total = shared.settings.longBreakInterval;
+    const done = Math.min(state.round, total);
+    el.dots.replaceChildren(
+      ...Array.from({ length: total }, (_, i) => {
+        const d = document.createElement("span");
+        d.className = "dot" + (i < done ? " is-done" : "");
+        return d;
+      }),
+    );
+  } else {
+    el.dots.replaceChildren();
+  }
 
   el.today.textContent = t("progress.today", { count: state.completedToday });
   el.viewTimer.dataset.phase = state.phase;

@@ -3,6 +3,7 @@
 /** User-adjustable settings. Durations are in minutes. */
 export const DEFAULT_SETTINGS = {
   durations: { pomodoro: 25, shortBreak: 5, longBreak: 15 },
+  longBreakEnabled: true, // when false: no long break, only short breaks
   longBreakInterval: 4, // pomodoros before a long break
   sound: "none", // "system" | "chime" | "none"
   volume: 0.5,

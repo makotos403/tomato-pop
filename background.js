@@ -3,7 +3,12 @@
 // `endTime` in storage plus a chrome.alarms deadline are the real clock.
 
 import { INITIAL_STATE, DEFAULT_SETTINGS } from "./defaults.js";
-import { reduce, remainingMs, phaseDurationMs } from "./state.js";
+import {
+  reduce,
+  remainingMs,
+  phaseDurationMs,
+  longBreakActive,
+} from "./state.js";
 import { getT } from "./i18n.js";
 
 const ALARM_PHASE_END = "phaseEnd";
@@ -293,16 +298,37 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         sendResponse({ state: await dispatch(msg.event) });
         break;
       case "SET_SETTINGS": {
-        const merged = { ...(await loadSettings()), ...msg.patch };
+        const prev = await loadSettings();
+        const merged = { ...prev, ...msg.patch };
         await chrome.storage.local.set({ settings: merged });
-        // If the timer is idle, keep its shown duration in step with the new
-        // settings right away (not only on the next Start).
+
         const st = await loadState();
-        if (st.status === "idle") {
-          const full = phaseDurationMs(st.phase, merged);
-          if (st.remainingMs !== full) {
-            await chrome.storage.local.set({ state: { ...st, remainingMs: full } });
+        let nextState = st;
+
+        // Long break toggled (either direction): restart the cycle count.
+        if (
+          msg.patch?.longBreakEnabled !== undefined &&
+          msg.patch.longBreakEnabled !== prev.longBreakEnabled
+        ) {
+          nextState = { ...nextState, round: 0 };
+        }
+        // Long break turned off while sitting on it: move to a short break.
+        if (
+          !longBreakActive(merged) &&
+          nextState.status === "idle" &&
+          nextState.phase === "longBreak"
+        ) {
+          nextState = { ...nextState, phase: "shortBreak" };
+        }
+        // Keep an idle timer's shown duration in step with the new settings.
+        if (nextState.status === "idle") {
+          const full = phaseDurationMs(nextState.phase, merged);
+          if (nextState.remainingMs !== full) {
+            nextState = { ...nextState, remainingMs: full };
           }
+        }
+        if (nextState !== st) {
+          await chrome.storage.local.set({ state: nextState });
         }
         sendResponse({ settings: merged });
         break;

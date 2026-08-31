@@ -1,0 +1,73 @@
+{
+  "appName": "トマトポップ",
+  "tagline": "画面で知らせるポモドーロタイマー",
+
+  "phase.work": "ポモドーロ",
+  "phase.shortBreak": "休憩",
+  "phase.longBreak": "長めの休憩",
+
+  "control.start": "開始",
+  "control.pause": "一時停止",
+  "control.resume": "再開",
+  "control.reset": "リセット",
+  "control.settings": "設定",
+
+  "state.idle": "待機中",
+  "state.paused": "一時停止中",
+  "state.running": "実行中",
+
+  "progress.today": "今日: {count}",
+  "progress.roundOf": "{done} / {total} 回",
+
+  "next.work": "ポモドーロを開始 →",
+  "next.shortBreak": "休憩を開始 →",
+  "next.longBreak": "長めの休憩を開始 →",
+
+  "notify.workDoneTitle": "集中セッション終了",
+  "notify.workDoneBody": "おつかれさま。少し休憩しましょう。",
+  "notify.shortBreakDoneTitle": "休憩終了",
+  "notify.shortBreakDoneBody": "準備ができたら再開しましょう。",
+  "notify.longBreakDoneTitle": "長めの休憩終了",
+  "notify.longBreakDoneBody": "次のポモドーロを始めましょう。",
+  "notify.btnStartBreak": "休憩を開始",
+  "notify.btnStartFocus": "ポモドーロを開始",
+  "notify.dismiss": "閉じる",
+
+  "flash.title": "⏰ 時間です",
+
+  "settings.title": "設定",
+  "settings.saved": "保存しました",
+  "settings.soundPreview": "試聴",
+
+  "settings.durationsHeading": "時間",
+  "settings.workLen": "ポモドーロ",
+  "settings.shortBreakLen": "休憩",
+  "settings.longBreakLen": "長めの休憩",
+  "settings.longBreakInterval": "長めの休憩までのポモドーロ数",
+  "settings.minutes": "分",
+
+  "settings.notifyHeading": "通知",
+  "settings.sound": "音",
+  "settings.soundSystem": "OS通知音",
+  "settings.soundChime": "ソフトな1音",
+  "settings.soundNone": "無音",
+  "settings.volume": "音量",
+  "settings.flashTab": "タブを点滅させる",
+  "settings.inPageBanner": "ページ内にバナーを表示",
+  "settings.permissionNote": "点滅とバナーには、表示中のページへのアクセス許可が必要です。",
+  "settings.permissionRequestBtn": "権限を許可",
+  "settings.permissionGranted": "許可済み",
+
+  "settings.iconHeading": "アイコン表示",
+  "settings.showBadge": "アイコンに残り時間（分）を表示",
+
+  "settings.languageHeading": "言語",
+  "settings.langAuto": "自動（ブラウザに合わせる）",
+  "settings.langJa": "日本語",
+  "settings.langEn": "English",
+
+  "permission.prompt": "タブの点滅とページ内バナーを使うには、表示中のページへのアクセスを許可してください。",
+  "permission.allow": "許可",
+  "permission.deny": "今はしない",
+  "permission.denied": "権限がないため、OS通知のみで案内します。"
+}

@@ -1,0 +1,73 @@
+{
+  "appName": "Tomato Pop",
+  "tagline": "Pomodoro timer with on-screen alerts",
+
+  "phase.work": "Pomodoro",
+  "phase.shortBreak": "Short break",
+  "phase.longBreak": "Long break",
+
+  "control.start": "Start",
+  "control.pause": "Pause",
+  "control.resume": "Resume",
+  "control.reset": "Reset",
+  "control.settings": "Settings",
+
+  "state.idle": "Ready",
+  "state.paused": "Paused",
+  "state.running": "Running",
+
+  "progress.today": "Today: {count}",
+  "progress.roundOf": "Round {done} of {total}",
+
+  "next.work": "Start Pomodoro →",
+  "next.shortBreak": "Start short break →",
+  "next.longBreak": "Start long break →",
+
+  "notify.workDoneTitle": "Pomodoro done",
+  "notify.workDoneBody": "Nice work — time for a break.",
+  "notify.shortBreakDoneTitle": "Break over",
+  "notify.shortBreakDoneBody": "Ready when you are.",
+  "notify.longBreakDoneTitle": "Long break over",
+  "notify.longBreakDoneBody": "Time for the next round.",
+  "notify.btnStartBreak": "Start break",
+  "notify.btnStartFocus": "Start Pomodoro",
+  "notify.dismiss": "Dismiss",
+
+  "flash.title": "⏰ Time's up",
+
+  "settings.title": "Settings",
+  "settings.saved": "Saved",
+  "settings.soundPreview": "Preview",
+
+  "settings.durationsHeading": "Timers",
+  "settings.workLen": "Pomodoro",
+  "settings.shortBreakLen": "Short break",
+  "settings.longBreakLen": "Long break",
+  "settings.longBreakInterval": "Rounds before a long break",
+  "settings.minutes": "min",
+
+  "settings.notifyHeading": "Notifications",
+  "settings.sound": "Sound",
+  "settings.soundSystem": "System sound",
+  "settings.soundChime": "Soft chime",
+  "settings.soundNone": "Silent",
+  "settings.volume": "Volume",
+  "settings.flashTab": "Flash the browser tab",
+  "settings.inPageBanner": "Show a banner on the page",
+  "settings.permissionNote": "Tab flashing and the page banner need permission to access the page you're viewing.",
+  "settings.permissionRequestBtn": "Grant permission",
+  "settings.permissionGranted": "Granted",
+
+  "settings.iconHeading": "Toolbar icon",
+  "settings.showBadge": "Show remaining minutes on the icon",
+
+  "settings.languageHeading": "Language",
+  "settings.langAuto": "Auto (match browser)",
+  "settings.langJa": "日本語",
+  "settings.langEn": "English",
+
+  "permission.prompt": "To flash the tab and show the in-page banner, allow access to the page you're viewing.",
+  "permission.allow": "Allow",
+  "permission.deny": "Not now",
+  "permission.denied": "Without permission, you'll get system notifications only."
+}

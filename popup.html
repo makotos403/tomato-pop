@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- ============ TIMER VIEW ============ -->
+      <section id="view-timer">
+        <nav class="tabs" id="tabs">
+          <button class="tab" data-phase="pomodoro" id="tab-pomodoro"></button>
+          <button class="tab" data-phase="shortBreak" id="tab-shortBreak"></button>
+          <button class="tab" data-phase="longBreak" id="tab-longBreak"></button>
+        </nav>
+
+        <main class="dial">
+          <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-track" cx="60" cy="60" r="52" pathLength="100" />
+            <circle
+              class="ring-progress"
+              cx="60"
+              cy="60"
+              r="52"
+              pathLength="100"
+              stroke-dasharray="100 100"
+            />
+          </svg>
+          <div class="dial-center">
+            <div class="time" id="time">25:00</div>
+          </div>
+        </main>
+
+        <div class="dots" id="dots" aria-hidden="true"></div>
+        <div class="today" id="today"></div>
+
+        <div class="controls">
+          <button class="btn btn-primary" id="btn-primary"></button>
+          <div class="controls-row">
+            <button class="btn btn-ghost" id="btn-reset"></button>
+            <button class="btn btn-ghost" id="btn-settings"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS VIEW ============ -->
+      <section id="view-settings" hidden>
+        <header class="s-head">
+          <button class="s-back" id="btn-back" aria-label="back">&larr;</button>
+          <h1 id="s-title"></h1>
+          <span class="s-saved" id="s-saved" hidden></span>
+        </header>
+
+        <div class="s-group">
+          <h2 id="s-h-durations"></h2>
+          <label class="s-row inline">
+            <span id="s-l-pomodoro"></span>
+            <span class="s-field">
+              <input type="number" id="dur-pomodoro" min="1" max="180" />
+              <span class="s-unit" data-unit></span>
+            </span>
+          </label>
+          <label class="s-row inline">
+            <span id="s-l-shortBreak"></span>
+            <span class="s-field">
+              <input type="number" id="dur-shortBreak" min="1" max="180" />
+              <span class="s-unit" data-unit></span>
+            </span>
+          </label>
+          <label class="s-row inline">
+            <span id="s-l-longBreak"></span>
+            <span class="s-field">
+              <input type="number" id="dur-longBreak" min="1" max="180" />
+              <span class="s-unit" data-unit></span>
+            </span>
+          </label>
+          <label class="s-row inline">
+            <span id="s-l-interval"></span>
+            <span class="s-field">
+              <input type="number" id="interval" min="1" max="12" />
+            </span>
+          </label>
+        </div>
+
+        <div class="s-group">
+          <h2 id="s-h-notify"></h2>
+          <div class="s-row">
+            <span class="s-label" id="s-l-sound"></span>
+            <div class="s-radios" id="sound-radios">
+              <label><input type="radio" name="sound" value="system" /><span id="o-sound-system"></span></label>
+              <label><input type="radio" name="sound" value="chime" /><span id="o-sound-chime"></span></label>
+              <label><input type="radio" name="sound" value="none" /><span id="o-sound-none"></span></label>
+            </div>
+          </div>
+          <div class="s-row inline" id="volume-row">
+            <span id="s-l-volume"></span>
+            <span class="s-field">
+              <input type="range" id="volume" min="0" max="100" step="5" />
+              <button class="s-mini" id="btn-preview"></button>
+            </span>
+          </div>
+          <label class="s-row check">
+            <input type="checkbox" id="flashTab" />
+            <span id="s-l-flashTab"></span>
+          </label>
+          <label class="s-row check">
+            <input type="checkbox" id="inPageBanner" />
+            <span id="s-l-inPageBanner"></span>
+          </label>
+          <p class="s-note" id="perm-note" hidden></p>
+        </div>
+
+        <div class="s-group">
+          <h2 id="s-h-icon"></h2>
+          <label class="s-row check">
+            <input type="checkbox" id="showBadge" />
+            <span id="s-l-showBadge"></span>
+          </label>
+        </div>
+
+        <div class="s-group">
+          <h2 id="s-h-language"></h2>
+          <div class="s-radios" id="lang-radios">
+            <label><input type="radio" name="lang" value="auto" /><span id="o-lang-auto"></span></label>
+            <label><input type="radio" name="lang" value="ja" /><span id="o-lang-ja"></span></label>
+            <label><input type="radio" name="lang" value="en" /><span id="o-lang-en"></span></label>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

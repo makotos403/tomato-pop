@@ -1,0 +1,384 @@
+/* ============ design tokens ============ */
+:root {
+  --bg: #fbf7f2;
+  --surface: #ffffff;
+  --text: #3a3330;
+  --text-dim: #8a817b;
+  --tomato: #e5533d;
+  --tomato-soft: #f6e3de;
+  --ring-track: #ede4dc;
+  --leaf: #6f8168;
+  --leaf-soft: #e7ece1;
+  --border: #ded5cd;
+  --btn-fg: #3a3330;
+  --btn-primary-bg: #3a3330;
+  --btn-primary-fg: #fbf7f2;
+  --font: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI",
+    Meiryo, sans-serif;
+}
+
+/* Auto dark — follows the OS / Chrome setting. The :not([data-theme=light])
+   guard lets a future manual "always light" toggle win. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #2a2422;
+    --surface: #332d2a;
+    --text: #ede4dc;
+    --text-dim: #a79e97;
+    --tomato-soft: #4a322c;
+    --ring-track: #433934;
+    --leaf: #869a72;
+    --leaf-soft: #363d30;
+    --border: #4a403b;
+    --btn-fg: #ede4dc;
+    --btn-primary-bg: #ede4dc;
+    --btn-primary-fg: #2a2422;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #2a2422;
+  --surface: #332d2a;
+  --text: #ede4dc;
+  --text-dim: #a79e97;
+  --tomato-soft: #4a322c;
+  --ring-track: #433934;
+  --leaf: #869a72;
+  --leaf-soft: #363d30;
+  --border: #4a403b;
+  --btn-fg: #ede4dc;
+  --btn-primary-bg: #ede4dc;
+  --btn-primary-fg: #2a2422;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  width: 300px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  padding: 14px 16px 16px;
+}
+
+#view-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ============ timer: tabs ============ */
+.tabs {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
+.tab {
+  flex: 1;
+  padding: 7px 4px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab:hover {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+#tab-pomodoro.is-active {
+  background: var(--tomato-soft);
+  color: var(--tomato);
+}
+
+#tab-shortBreak.is-active,
+#tab-longBreak.is-active {
+  background: var(--leaf-soft);
+  color: var(--leaf);
+}
+
+/* ============ timer: dial ============ */
+.dial {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: grid;
+  place-items: center;
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--ring-track);
+  stroke-width: 8;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: var(--tomato);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 60px 60px;
+  transition: stroke-dasharray 0.3s linear, transform 0.3s linear;
+}
+
+#view-timer[data-phase="shortBreak"] .ring-progress,
+#view-timer[data-phase="longBreak"] .ring-progress {
+  stroke: var(--leaf);
+}
+
+.dial-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time {
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============ timer: dots / today ============ */
+.dots {
+  display: flex;
+  gap: 6px;
+  min-height: 8px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ring-track);
+}
+
+.dot.is-done {
+  background: var(--leaf);
+}
+
+.today {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ============ timer: controls ============ */
+.controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.btn-primary {
+  padding: 11px;
+  font-size: 14px;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.controls-row {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-ghost {
+  flex: 1;
+  padding: 9px;
+  font-size: 12px;
+  background: transparent;
+  color: var(--btn-fg);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+/* ============ settings view (same 300px popup) ============ */
+.s-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+}
+
+.s-back {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 6px;
+  margin-left: -6px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.s-back:hover {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+.s-head h1 {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.s-saved {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--leaf);
+  transition: opacity 0.3s;
+}
+
+.s-group {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.s-group h2 {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.s-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  padding: 5px 0;
+}
+
+.s-row.inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.s-row.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.s-label {
+  font-weight: 600;
+}
+
+.s-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.s-unit {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.s-radios {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 2px;
+}
+
+.s-radios label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.s-note {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 8px;
+}
+
+input[type="number"] {
+  width: 56px;
+  padding: 6px 7px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-align: right;
+}
+
+input[type="range"] {
+  width: 128px;
+  accent-color: var(--tomato);
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--tomato);
+}
+
+.s-mini {
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--btn-fg);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.s-mini:hover {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}

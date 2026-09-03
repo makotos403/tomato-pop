@@ -3,6 +3,6 @@
     "message": "Tomato Pop"
   },
   "appDesc": {
-    "message": "Pomodoro focus timer. A banner slides down the page and the toolbar shows a live countdown when a session ends. EN & JA."
+    "message": "A Pomodoro timer that announces each session's end with a slide-in page banner and a live toolbar countdown. EN & JA."
   }
 }

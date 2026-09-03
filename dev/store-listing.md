@@ -19,13 +19,18 @@
 
 ## 2. 概要 / Summary（132字以内）
 
+英語を基準表現とし、日本語も並行で用意する。
+
+**EN（基準）**
+> A Pomodoro timer that announces each session's end with a slide-in page banner and a live toolbar countdown. EN & JA.
+
 **JA**
-> ポモドーロの終了を、ページ上部のスライドインバナーとアイコンの残り時間表示で知らせる集中タイマー。時間は自由に設定。日英対応。
+> ポモドーロの終了を、ページ上部のスライドインバナーとアイコンの残り時間表示で知らせる Chrome 拡張機能。日英対応。
 
-**EN**
-> Pomodoro focus timer. A banner slides down the page and the toolbar shows a live countdown when a session ends. EN & JA.
+（`_locales/*/messages.json` の `appDesc` と同一）
 
-（`_locales/*/messages.json` の `appDesc` と同一にしてある）
+### GitHub リポジトリ About 欄（英語）
+> A Chrome extension that announces the end of each Pomodoro session with a banner sliding down from the top of the page and a live countdown on the toolbar icon. English & Japanese, MV3.
 
 ---
 

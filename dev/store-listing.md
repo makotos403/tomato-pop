@@ -10,10 +10,11 @@
 
 ## 1. 名前
 
-- EN: `Tomato Pop`
-- JA: `トマトポップ`
+- EN: `Tomato Pop Timer`（v1.2.0〜。それ以前は `Tomato Pop`）
+- JA: `トマトポップタイマー`
 
-（manifest の `__MSG_appName__` から自動）
+（manifest の `__MSG_appName__` から自動。検索で「タイマー / timer」に当てるため v1.2.0 で改名。
+short_name は `__MSG_appNameShort__` = `Tomato Pop` / `トマトポップ`）
 
 ---
 

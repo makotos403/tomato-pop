@@ -1,5 +1,8 @@
 {
   "appName": {
+    "message": "Tomato Pop Timer"
+  },
+  "appNameShort": {
     "message": "Tomato Pop"
   },
   "appDesc": {

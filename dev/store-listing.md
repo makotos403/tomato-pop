@@ -158,6 +158,13 @@ Dashboard の「プライバシー」タブで各権限に入力。英語推奨�
 
 - EN セットは Chrome UI もほぼ英語（一部「Google に質問する」等が日本語のまま。実害小）
 
+### プロモーションタイル（小・440×280・任意）
+
+`dev/store/promo-tile.png` — Gemini 生成の下絵（`raw/promo-tile-src.jpg`）から、
+崩れた英語タグラインを塗りつぶして 440×280 にリサイズしたもの（`dev/promo_tile.py`）。
+温かいオフホワイト＋トマト＋タイマーの赤い円弧＋「Tomato Pop」の文字。全言語共通で可。
+マーキータイル（1400×560）は未作成（不要なら省略）。
+
 ### 背景の Web ページ（#2 用）
 
 **推奨：Wikipedia の「ポモドーロ・テクニック」記事**（EN 掲載は "Pomodoro Technique"）

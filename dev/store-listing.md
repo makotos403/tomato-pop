@@ -46,12 +46,16 @@
 ツールバーのアイコンには残り時間が MM:SS でリアルタイム表示されるので、
 タイマーを開かなくても状況がわかります。
 
+■ タイマーを切り離して常に表示
+「↗」ボタンで、タイマーを小さな別ウィンドウに切り離せます。
+ツールバーのドロップダウンと違い、フォーカスが外れても消えません。
+作業しながら残り時間をいつでも確認できます（窓の高さは中身に合わせて自動調整）。
+
 ■ できること
 ・ポモドーロ / 短い休憩 / 長めの休憩 の3つ。時間はすべて分単位で設定可能
 ・長めの休憩は「使う / 使わない」を切り替え可能（短いインターバルを繰り返したい人向け）
 ・セッションの移行は手動。終了時に「次を開始」か「終了」を選ぶだけ
 ・アイコンをクリックすると円形タイマー（赤い弧が時計回りに減っていく）
-・「↗」で小さな別ウィンドウに切り離し、タイマーを常に表示
 ・日本語・英語対応。ブラウザの言語に自動追従、設定で切り替えも可能
 ・ライト / ダークはブラウザの設定に自動追従
 
@@ -75,12 +79,16 @@ When a focus or break interval ends, a compact banner slides down from the top o
 the page you're on. The toolbar icon also shows the time left as a live MM:SS
 countdown, so you always know where you are without opening the timer.
 
+KEEP THE TIMER ON SCREEN
+The "↗" button detaches the timer into a small window. Unlike the toolbar
+dropdown, it doesn't disappear when it loses focus, so you can keep an eye on the
+time remaining while you work. The window auto-fits its height to the content.
+
 FEATURES
 - Pomodoro / short break / long break, each length adjustable in minutes
 - The long break can be turned off entirely (handy for short, repeated intervals)
 - Manual transitions: when an interval ends you choose "start next" or "done"
 - Click the icon for a circular timer (a red arc that winds down clockwise)
-- Pop it out ("↗") into a small window to keep the timer on screen
 - English and Japanese; follows your browser language, switchable in settings
 - Light / dark follows your browser setting
 
@@ -132,21 +140,23 @@ Dashboard の「プライバシー」タブで各権限に入力。英語推奨�
 
 ---
 
-## 7. スクリーンショット（1280×800 PNG、日英で別セット）
+## 7. スクリーンショット（1280×800 PNG・日英で別セット・完成）
 
-**作成済み** → `dev/store/`（アップロード可・1280×800・24bit PNG）。原本は `dev/store/raw/`。
-ブラウザ窓を温かいオフホワイト #FBF7F2 の上に薄い影付きで配置。
+**アップロード用** → `dev/store/`（5枚 × ja/en）。撮影原本 → `dev/store/raw/`（`ss01`〜`ss06`。`ss05`＝休憩の緑は不使用）。
 
-| # | ファイル（`-ja` / `-en`） | 画面 | キャプション JA / EN |
-|---|---|---|---|
-| 1（ヒーロー） | `1-timer` | 円形タイマー実行中（ライト）＋バッジ `12:48` | 画面で知らせるポモドーロタイマー / A Pomodoro timer that tells you on-screen |
-| 2 | `2-banner` | Wikipedia 上にスライドインバナー（`セッション終了` ＋ 2ボタン） | 作業が終わると、見ているページにお知らせ / When a session ends, a banner slides down the page |
-| 3 | `3-settings` | 設定画面（時間・音・言語、長めの休憩トグル ON） | 時間・音・言語をこまかく設定 / Tune the timers, sound, and language |
-| 4 | `4-dark` | ダークモードのタイマー | ライト / ダークに自動対応 / Adapts to light and dark |
-| 5（任意） | `5-break` | 休憩フェーズ（緑のリング、「休憩」タブ） | 集中は赤、休憩は緑 / Focus in red, breaks in green |
+- ブラウザ最大化のネイティブ 1280×800 キャプチャ（Wikipedia「ポモドーロ・テクニック」記事）
+- 下部に全幅キャプション帯（焦げ茶 #3A3330 ＋ トマト色のアクセント線 ＋ クリーム文字。フォント Yu Gothic Bold）
+- 生成：`dev/caption_shots.py`（`dev/store/raw/` を読んで `dev/store/` に出力）
 
-- キャプション文字はまだ画像に焼き込んでいない。ストアはキャプションなしでも可。焼き込むなら別途。
-- EN 掲載で Chrome UI が日本語のまま（`Google に質問する` 等）。審査・視認上の実害は小さいが、気になるなら英語 Chrome で撮り直し。
+| # | ファイル | 画面 | キャプション JA / EN | 原本 |
+|---|---|---|---|---|
+| 1 | `1-timer` | 円形タイマー実行中（ドロップダウン・ライト） | 画面で知らせるポモドーロタイマー / A Pomodoro timer that tells you on the screen | ss01 |
+| 2 | `2-banner` | スライドインバナー（セッション終了 ＋ 2ボタン） | 終了を、見ているページの上部でお知らせ / A banner slides down the page when a session ends | ss03 |
+| 3 | `3-popout` | ポップアウト窓がページの上に浮遊（v1.1.0） | タイマーを切り離して、常に画面に表示 / Pop the timer out to keep it on screen | ss04 |
+| 4 | `4-settings` | 設定画面（時間・音・言語、長め休憩トグル ON） | 時間・音・言語をこまかく設定 / Tune the timers, sound, and language | ss02 |
+| 5 | `5-dark` | ダークモードのタイマー | ライト / ダークに自動で対応 / Adapts to light and dark automatically | ss06 |
+
+- EN セットは Chrome UI もほぼ英語（一部「Google に質問する」等が日本語のまま。実害小）
 
 ### 背景の Web ページ（#2 用）
 

@@ -67,6 +67,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* pop-out window mode: fill the window (which is auto-sized to content) */
+.window-mode {
+  width: 100%;
+  min-width: 300px;
+  background: var(--bg);
+}
+
+.window-mode body {
+  width: 100%;
+  min-width: 300px;
+}
+
 .app {
   padding: 14px 16px 16px;
 }
@@ -231,6 +243,14 @@ body {
 
 .btn-ghost:hover {
   background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+.btn-icon {
+  flex: 0 0 auto;
+  width: 38px;
+  padding: 9px 0;
+  font-size: 14px;
+  line-height: 1;
 }
 
 /* ============ settings view (same 300px popup) ============ */

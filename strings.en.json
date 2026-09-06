@@ -11,6 +11,7 @@
   "control.resume": "Resume",
   "control.reset": "Reset",
   "control.settings": "Settings",
+  "control.popOut": "Open in a window",
 
   "state.idle": "Ready",
   "state.paused": "Paused",

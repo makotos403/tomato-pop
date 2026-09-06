@@ -260,6 +260,57 @@ async function alertActiveTab(finished, next, settings) {
   }
 }
 
+// --- pop-out window --------------------------------------------------
+// A detached window showing popup.html?w=1, so the timer stays visible when
+// the toolbar dropdown would have closed. Its id lives in session storage
+// (the SW is torn down between events). No permission needed for chrome.windows.
+
+const WIN_KEY = "timerWindowId";
+const WIN_BOUNDS_KEY = "timerWindowBounds";
+
+async function openTimerWindow() {
+  const { [WIN_KEY]: id } = await chrome.storage.session.get(WIN_KEY);
+  if (typeof id === "number") {
+    try {
+      await chrome.windows.update(id, { focused: true, drawAttention: true });
+      return;
+    } catch (_) {
+      /* window was closed — fall through and recreate */
+    }
+  }
+  const { [WIN_BOUNDS_KEY]: b = {} } = await chrome.storage.local.get(WIN_BOUNDS_KEY);
+  const win = await chrome.windows.create({
+    url: chrome.runtime.getURL("popup.html?w=1"),
+    type: "popup",
+    width: b.width ?? 340,
+    height: b.height ?? 440,
+    left: b.left,
+    top: b.top,
+    focused: true,
+  });
+  await chrome.storage.session.set({ [WIN_KEY]: win.id });
+}
+
+chrome.windows.onRemoved.addListener(async (windowId) => {
+  const { [WIN_KEY]: id } = await chrome.storage.session.get(WIN_KEY);
+  if (windowId === id) await chrome.storage.session.remove(WIN_KEY);
+});
+
+if (chrome.windows.onBoundsChanged) {
+  chrome.windows.onBoundsChanged.addListener(async (win) => {
+    const { [WIN_KEY]: id } = await chrome.storage.session.get(WIN_KEY);
+    if (win.id !== id) return;
+    await chrome.storage.local.set({
+      [WIN_BOUNDS_KEY]: {
+        width: win.width,
+        height: win.height,
+        left: win.left,
+        top: win.top,
+      },
+    });
+  });
+}
+
 // --- chrome event wiring ----------------------------------------------
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -339,6 +390,10 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         sendResponse({ ok: true });
         break;
       }
+      case "OPEN_WINDOW":
+        await openTimerWindow();
+        sendResponse({ ok: true });
+        break;
       default:
         // ignore messages meant for other contexts (e.g. target: "offscreen")
         if (!msg?.target) sendResponse({ error: "unknown message" });

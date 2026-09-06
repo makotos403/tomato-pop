@@ -28,8 +28,12 @@ const el = {
   primary: document.getElementById("btn-primary"),
   reset: document.getElementById("btn-reset"),
   settings: document.getElementById("btn-settings"),
+  popout: document.getElementById("btn-popout"),
   back: document.getElementById("btn-back"),
 };
+
+// "?w=1" -> this page is the detached pop-out window, not the toolbar dropdown.
+const windowMode = new URLSearchParams(location.search).get("w") === "1";
 
 // Shared with settings.js — it reads settings + t from here.
 const shared = { settings: null, t: (k) => k };
@@ -101,6 +105,7 @@ function renderStatic(state) {
   }
   el.reset.textContent = t("control.reset");
   el.settings.textContent = t("control.settings");
+  el.popout.title = t("control.popOut");
 }
 
 function renderTick(state) {
@@ -129,6 +134,27 @@ async function refresh() {
   if (state.status === "running") {
     tickTimer = setInterval(() => renderTick(state), 250);
   }
+  fitWindow();
+}
+
+// In the pop-out window, resize the window to fit the current view's content
+// (the toolbar dropdown does this automatically; a window does not).
+async function fitWindow() {
+  if (!windowMode) return;
+  try {
+    const win = await chrome.windows.getCurrent();
+    // Measure the actual content box — documentElement.scrollHeight can't drop
+    // below the viewport, so it never lets the window shrink again.
+    const app = document.querySelector(".app");
+    const contentH = Math.ceil(app.getBoundingClientRect().bottom) + 2;
+    const frame = win.height - window.innerHeight; // title bar + borders
+    const target = Math.max(320, Math.min(680, contentH + frame));
+    if (Math.abs(target - win.height) > 3) {
+      await chrome.windows.update(win.id, { height: target });
+    }
+  } catch (_) {
+    /* window closing */
+  }
 }
 
 // --- language ---
@@ -152,6 +178,7 @@ async function showSettings() {
   el.viewTimer.hidden = true;
   el.viewSettings.hidden = false;
   await openSettings();
+  fitWindow();
 }
 
 function showTimer() {
@@ -182,6 +209,11 @@ el.reset.addEventListener("click", async () => {
 el.settings.addEventListener("click", showSettings);
 el.back.addEventListener("click", showTimer);
 
+el.popout.addEventListener("click", async () => {
+  await send({ type: "OPEN_WINDOW" });
+  window.close(); // close the dropdown; the window takes over
+});
+
 // react to background-driven changes (e.g. a phase ending while the popup is open)
 chrome.storage.local.onChanged.addListener((changes) => {
   if ((changes.state || changes.settings) && !el.viewTimer.hidden) refresh();
@@ -190,6 +222,11 @@ chrome.storage.local.onChanged.addListener((changes) => {
 // --- boot ---
 
 (async () => {
+  if (windowMode) {
+    document.documentElement.classList.add("window-mode");
+    el.popout.hidden = true; // the window is already "popped out"
+  }
+
   const { settings } = await getSnapshot();
   shared.settings = settings;
   await applyLang();

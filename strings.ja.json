@@ -11,6 +11,7 @@
   "control.resume": "再開",
   "control.reset": "リセット",
   "control.settings": "設定",
+  "control.popOut": "別ウィンドウで開く",
 
   "state.idle": "待機中",
   "state.paused": "一時停止中",

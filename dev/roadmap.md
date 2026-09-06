@@ -1,10 +1,26 @@
 # ロードマップ
 
-## v1.1.0 — ⤢ ポップアウト・ウィンドウ
+## v1.1.0 — ↗ ポップアウト・ウィンドウ（実装済み・未リリース）
 
 **目的**：タイマーを常に画面に出しておけるようにする（ドロップダウンのポップアップはフォーカスが外れると閉じるため）。
 
-**着手条件**：v1.0.0 がストアで承認・公開されてから。審査中のバージョンはいじらない。
+**状態**：実装完了。実機テスト → zip 作成 → ストアにアップロードで v1.1.0 リリース。
+（`_locales` の英語基準 appDesc もこのパッケージに乗る）
+
+### 実装の実際
+
+- ドロップダウンの操作行に `↗` ボタン → `OPEN_WINDOW` メッセージ → `background.js` の `openTimerWindow()`
+- `chrome.windows.create({ type:"popup", url:"popup.html?w=1" })`。窓 ID は `chrome.storage.session`（`WIN_KEY`）
+- 既に開いていれば `chrome.windows.update(id,{focused:true,drawAttention:true})` だけ
+- `chrome.windows.onRemoved` → ID クリア（stale ID は次回 open 時に自己修復）
+- `chrome.windows.onBoundsChanged` → 位置・サイズを `storage.local`（`WIN_BOUNDS_KEY`）に保存 → 次回復元
+- `popup.js`：`?w=1` で窓モード判定 → `↗` ボタンを隠す、`<html>.window-mode`、`fitWindow()` で中身に合わせて窓の高さを自動調整
+- 窓とドロップダウンは同じ background 状態を読む → `storage.onChanged` で自動同期（既存配線）
+- 新権限なし。状態機械（`state.js`）は不変 → テスト追加なし
+
+---
+
+（旧メモ）**着手条件**：v1.0.0 がストアで承認・公開されてから。審査中のバージョンはいじらない。
 
 ### 方式（合意済み）
 

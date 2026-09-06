@@ -51,6 +51,7 @@
 ・長めの休憩は「使う / 使わない」を切り替え可能（短いインターバルを繰り返したい人向け）
 ・セッションの移行は手動。終了時に「次を開始」か「終了」を選ぶだけ
 ・アイコンをクリックすると円形タイマー（赤い弧が時計回りに減っていく）
+・「↗」で小さな別ウィンドウに切り離し、タイマーを常に表示
 ・日本語・英語対応。ブラウザの言語に自動追従、設定で切り替えも可能
 ・ライト / ダークはブラウザの設定に自動追従
 
@@ -79,6 +80,7 @@ FEATURES
 - The long break can be turned off entirely (handy for short, repeated intervals)
 - Manual transitions: when an interval ends you choose "start next" or "done"
 - Click the icon for a circular timer (a red arc that winds down clockwise)
+- Pop it out ("↗") into a small window to keep the timer on screen
 - English and Japanese; follows your browser language, switchable in settings
 - Light / dark follows your browser setting
 
@@ -167,6 +169,6 @@ Dashboard の「プライバシー」タブで各権限に入力。英語推奨�
 
 ```
 cd D:\Create\Tools\tomato-pop
-zip -r ../tomato-pop-v1.0.0.zip . \
+zip -r ../tomato-pop-v<version>.zip . \
   -x 'dev/*' '.git/*' '*.md' 'LICENSE' '.gitignore' '.gitattributes' '*.zip'
 ```

@@ -4,10 +4,10 @@
 
 - **改名**：`Tomato Pop` → **`Tomato Pop Timer`** / `トマトポップタイマー`
   （検索で「タイマー / timer」に当てる。`_locales` の `appName`。`short_name` は `appNameShort` = `Tomato Pop`）
-- **アイコン**：サイズ別に描き分け（`dev/build_icons.py`、マスターは `dev/icon_src.png`）
-  - `icon128` / `icon48` … トマト ＋ 3/4 タイマーアーク（ポップアップの円弧と呼応・他ポモドーロ拡張と差別化）
-  - `icon32` / `icon16` … トマトのみ（フルリングは 16px で潰れるため）
-  - 参考マスター `dev/icon_ring_src.png` を書き出す
+- **アイコン**：プロモタイルの Gemini トマトを抽出して差し替え（つや・星型のヘタで現行のフラット版より情報量あり）
+  - パイプライン：`dev/extract_tomato.py`（`promo-tile-src.jpg` からトマトだけ抽出 → `dev/icon_src.png`）→ `dev/build_icons.py`（4サイズ）
+  - **リング意匠は不採用**（16px で潰れて視認性が落ちる）。タイマーのアイデンティティはポップアップの円弧が担う
+  - 全サイズ同じ絵
 - リリース：v1.1.0 承認・公開後、`version` 1.2.0 で zip 再作成 → アップロード
 - ストア掲載：表示名・スクリーンショット #1（新アイコン）・詳細説明を更新
 

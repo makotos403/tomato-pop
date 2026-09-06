@@ -40,7 +40,7 @@ short_name は `__MSG_appNameShort__` = `Tomato Pop` / `トマトポップ`）
 **JA**
 
 ```
-トマトポップは、ポモドーロ・テクニックのための集中タイマーです。
+トマトポップタイマーは、ポモドーロ・テクニックのための集中タイマーです。
 
 ■ 特徴：終了を「画面で」知らせる
 作業や休憩の時間が終わると、いま見ているページの上部からバナーがスライドで降りてきます。
@@ -73,7 +73,7 @@ short_name は `__MSG_appNameShort__` = `Tomato Pop` / `トマトポップ`）
 **EN**
 
 ```
-Tomato Pop is a focus timer for the Pomodoro Technique.
+Tomato Pop Timer is a focus timer for the Pomodoro Technique.
 
 WHAT MAKES IT DIFFERENT — it tells you on the screen
 When a focus or break interval ends, a compact banner slides down from the top of
@@ -108,7 +108,7 @@ on your device — nothing is collected or sent anywhere.
 ## 4. 単一用途の説明 / Single purpose
 
 **EN（審査は英語なので英語で入力）**
-> Tomato Pop is a Pomodoro timer. It runs the focus and break intervals that the
+> Tomato Pop Timer is a Pomodoro timer. It runs the focus and break intervals that the
 > user configures and notifies the user when each interval ends.
 
 **JA（参考）**
@@ -161,10 +161,9 @@ Dashboard の「プライバシー」タブで各権限に入力。英語推奨�
 
 ### プロモーションタイル（小・440×280・任意）
 
-`dev/store/promo-tile.png` — Gemini 生成の下絵（`raw/promo-tile-src.jpg`）から、
-崩れた英語タグラインを塗りつぶして 440×280 にリサイズしたもの（`dev/promo_tile.py`）。
-温かいオフホワイト＋トマト＋タイマーの赤い円弧＋「Tomato Pop」の文字。全言語共通で可。
-マーキータイル（1400×560）は未作成（不要なら省略）。
+`dev/store/promo-tile.png` — Gemini 生成の下絵（`raw/promo-tile-src.jpg`・「Tomato Pop Timer」版）を
+440×280 にリサイズしただけ（`dev/promo_tile.py`）。温かいオフホワイト＋トマト＋タイマーの赤い円弧＋
+2行の「Tomato Pop / Timer」。全言語共通で可。マーキータイル（1400×560）は未作成（不要なら省略）。
 
 ### 背景の Web ページ（#2 用）
 

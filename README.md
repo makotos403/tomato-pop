@@ -1,12 +1,13 @@
 # トマトポップ / Tomato Pop
 
-> 各ポモドーロの終了を、画面上部からスライドインするバナーと通知で知らせるシンプルな
-> ポモドーロタイマーの Chrome 拡張機能（Manifest V3）。日本語・英語対応。
+> 各ポモドーロの終了を、ページ上部のスライドインバナーとアイコンの残り時間表示で
+> 知らせるポモドーロタイマーの Chrome 拡張機能（Manifest V3）。日本語・英語対応。
 >
-> A simple Pomodoro timer Chrome extension (MV3). When a session ends it slides a
-> banner down from the top of the page and shows a notification. English & Japanese.
+> A Pomodoro timer Chrome extension (MV3). When a session ends, a banner slides
+> down the page and the toolbar icon shows a live countdown. English & Japanese.
 
-**開発中 / Work in progress** — まだストア公開していません。
+**🍅 Chrome ウェブストアで公開中 / Available on the Chrome Web Store**
+→ https://chromewebstore.google.com/detail/ghajmjggajkifojhgdegfcdfaphmijeg
 
 ---
 
@@ -19,7 +20,11 @@
 - セッションの移行は**手動**。終了時に「次を開始 →」を提案するだけ
 - 外部通信なし — すべてブラウザ内で完結（[PRIVACY.md](PRIVACY.md)）
 
-## インストール（開発版）
+## インストール
+
+- **通常** → [Chrome ウェブストア](https://chromewebstore.google.com/detail/ghajmjggajkifojhgdegfcdfaphmijeg)
+
+### 開発版（ソースから）
 
 1. このフォルダを clone またはダウンロード
 2. `chrome://extensions` を開き「デベロッパーモード」をON

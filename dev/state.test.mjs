@@ -4,6 +4,7 @@ import { DEFAULT_SETTINGS, INITIAL_STATE } from "../defaults.js";
 import { reduce, remainingMs } from "../state.js";
 
 const S = DEFAULT_SETTINGS;
+const SL = { ...S, longBreakEnabled: true }; // long break switched on
 const T0 = 1_700_000_000_000;
 let passed = 0;
 const test = (name, fn) => {
@@ -53,7 +54,7 @@ test("4th pomodoro end -> long break", () => {
   const running = {
     ...INITIAL_STATE, phase: "pomodoro", status: "running", endTime: T0, round: 3,
   };
-  const { state } = reduce(running, S, { type: "PHASE_END" }, T0);
+  const { state } = reduce(running, SL, { type: "PHASE_END" }, T0);
   assert.equal(state.phase, "longBreak");
   assert.equal(state.round, 4);
 });
@@ -79,10 +80,18 @@ test("PHASE_END emits notify + tab-alert + sound effects", () => {
 
 test("SELECT_PHASE switches and resets to full", () => {
   let s = reduce(INITIAL_STATE, S, { type: "START" }, T0).state;
-  s = reduce(s, S, { type: "SELECT_PHASE", phase: "longBreak" }, T0).state;
+  s = reduce(s, SL, { type: "SELECT_PHASE", phase: "longBreak" }, T0).state;
   assert.equal(s.phase, "longBreak");
   assert.equal(s.status, "idle");
   assert.equal(remainingMs(s), 15 * 60_000);
+});
+
+test("long break is off by default: no long break even after many rounds", () => {
+  assert.equal(S.longBreakEnabled, false);
+  const running = {
+    ...INITIAL_STATE, phase: "pomodoro", status: "running", endTime: T0, round: 3,
+  };
+  assert.equal(reduce(running, S, { type: "PHASE_END" }, T0).state.phase, "shortBreak");
 });
 
 test("long break disabled: a finished pomodoro always leads to a short break", () => {

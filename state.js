@@ -120,11 +120,13 @@ export function reduce(state, settings, event, now = Date.now()) {
       const today = localDay(now);
       let round = state.round;
       let completedToday = state.today === today ? state.completedToday : 0;
+      let totalCompleted = state.totalCompleted ?? 0;
       let next;
 
       if (finished === "pomodoro") {
         round += 1;
         completedToday += 1;
+        totalCompleted += 1;
         next =
           longBreakActive(settings) && round >= settings.longBreakInterval
             ? "longBreak"
@@ -143,6 +145,7 @@ export function reduce(state, settings, event, now = Date.now()) {
         remainingMs: phaseDurationMs(next, settings),
         round,
         completedToday,
+        totalCompleted,
         today,
       };
       return {

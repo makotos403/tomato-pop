@@ -44,6 +44,16 @@
         </div>
       </section>
 
+      <!-- ============ RATING REQUEST VIEW (replaces the timer when due) ============ -->
+      <section id="review" hidden>
+        <img class="review-icon" src="icons/icon128.png" alt="" />
+        <p class="review-title" id="review-title"></p>
+        <p class="review-body" id="review-body"></p>
+        <a class="btn btn-primary review-rate" id="review-rate" target="_blank" rel="noopener"></a>
+        <button class="btn btn-ghost review-later" id="review-later"></button>
+        <button class="review-never" id="review-never"></button>
+      </section>
+
       <!-- ============ SETTINGS VIEW ============ -->
       <section id="view-settings" hidden>
         <header class="s-head">
@@ -129,6 +139,10 @@
             <label><input type="radio" name="lang" value="ja" /><span id="o-lang-ja"></span></label>
             <label><input type="radio" name="lang" value="en" /><span id="o-lang-en"></span></label>
           </div>
+        </div>
+
+        <div class="s-group">
+          <a class="s-link" id="s-rate-link" target="_blank" rel="noopener"></a>
         </div>
       </section>
     </div>

@@ -1,6 +1,8 @@
 // The settings view shown inside the popup (same 300px area as the timer).
 // popup.js owns the shared { settings, t } object and passes it in as ctx.state.
 
+import { REVIEW_URL } from "./review.js";
+
 const $ = (id) => document.getElementById(id);
 
 // scripting + host access — needed for the in-page banner.
@@ -48,6 +50,9 @@ export function localizeSettings() {
   $("o-lang-auto").textContent = t("settings.langAuto");
   $("o-lang-ja").textContent = t("settings.langJa");
   $("o-lang-en").textContent = t("settings.langEn");
+
+  $("s-rate-link").textContent = t("settings.rateLink");
+  $("s-rate-link").href = REVIEW_URL;
 }
 
 // Called every time the settings view is opened.
@@ -197,6 +202,12 @@ function wire() {
   $("showBadge").addEventListener("change", () =>
     save({ showBadge: $("showBadge").checked }),
   );
+
+  // Background records "rated" (so nothing interrupts later), then opens the store.
+  $("s-rate-link").addEventListener("click", (e) => {
+    e.preventDefault();
+    ctx.send({ type: "REVIEW_ANSWER", answer: "rate" });
+  });
 
   document.querySelectorAll("input[name=lang]").forEach((r) =>
     r.addEventListener("change", async () => {

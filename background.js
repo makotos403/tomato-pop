@@ -10,6 +10,11 @@ import {
   longBreakActive,
 } from "./state.js";
 import { getT } from "./i18n.js";
+import {
+  REVIEW_URL,
+  isReviewDue,
+  nextReview,
+} from "./review.js";
 
 const ALARM_PHASE_END = "phaseEnd";
 const ALARM_BADGE = "badgeTick";
@@ -78,7 +83,7 @@ async function runEffects(effects, state, settings) {
         await playSound(settings);
         break;
       case "alertTab":
-        await alertActiveTab(e.finished, e.next, settings);
+        await alertActiveTab(e.finished, e.next, settings, state);
         break;
     }
   }
@@ -225,7 +230,7 @@ async function playSound(settings) {
 
 const HOST_PERM = { permissions: ["scripting"], origins: ["*://*/*"] };
 
-async function alertActiveTab(finished, next, settings) {
+async function alertActiveTab(finished, next, settings, state) {
   if (!settings.inPageBanner) return;
   if (!(await chrome.permissions.contains(HOST_PERM))) return;
 
@@ -234,6 +239,25 @@ async function alertActiveTab(finished, next, settings) {
 
   const t = await getT(settings.language);
   const [titleKey, bodyKey] = DONE_KEYS[finished];
+  // Rating ask rides on the banner only right after a finished pomodoro, and
+  // only when due. Any storage trouble means "no ask" (see review.js).
+  let review = null;
+  if (finished === "pomodoro") {
+    try {
+      const { review: saved } = await chrome.storage.local.get("review");
+      if (isReviewDue(state?.totalCompleted, saved)) {
+        review = {
+          body: t("review.body"),
+          rate: t("review.rate"),
+          later: t("review.later"),
+          never: t("review.never"),
+        };
+      }
+    } catch (_) {
+      review = null;
+    }
+  }
+
   const payload = {
     type: "TP_ALERT",
     banner: {
@@ -246,6 +270,7 @@ async function alertActiveTab(finished, next, settings) {
           : t("notify.btnStartBreak"),
       end: t("notify.btnEnd"),
       dismiss: t("notify.dismiss"),
+      review,
     },
   };
 
@@ -387,6 +412,21 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       case "PREVIEW_SOUND": {
         const s = await loadSettings();
         await playChime(s.volume ?? 0.5);
+        sendResponse({ ok: true });
+        break;
+      }
+      case "REVIEW_ANSWER": {
+        // From the in-page banner. Record the answer first, then open the store.
+        if (!["rate", "later", "never"].includes(msg.answer)) {
+          sendResponse({ error: "bad answer" });
+          break;
+        }
+        const st = await loadState();
+        const { review } = await chrome.storage.local.get("review");
+        await chrome.storage.local.set({
+          review: nextReview(review, msg.answer, st.totalCompleted ?? 0),
+        });
+        if (msg.answer === "rate") await chrome.tabs.create({ url: REVIEW_URL });
         sendResponse({ ok: true });
         break;
       }

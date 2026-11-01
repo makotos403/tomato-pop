@@ -65,5 +65,13 @@
   "settings.langJa": "日本語",
   "settings.langEn": "English",
 
+  "settings.rateLink": "★ Rate / review on the Chrome Web Store",
+
+  "review.title": "Thank you for using Tomato Pop Timer",
+  "review.body": "If it has been useful, we would be grateful if you could leave a rating on the Chrome Web Store. Thank you for your support.",
+  "review.rate": "Rate",
+  "review.later": "Maybe later",
+  "review.never": "Don't show again",
+
   "permission.denied": "Without permission, you'll get system notifications only."
 }

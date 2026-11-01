@@ -3,7 +3,7 @@
 /** User-adjustable settings. Durations are in minutes. */
 export const DEFAULT_SETTINGS = {
   durations: { pomodoro: 25, shortBreak: 5, longBreak: 15 },
-  longBreakEnabled: true, // when false: no long break, only short breaks
+  longBreakEnabled: false, // when false: no long break, only short breaks (off by default)
   longBreakInterval: 4, // pomodoros before a long break
   sound: "none", // "system" | "chime" | "none"
   volume: 0.5,
@@ -20,5 +20,6 @@ export const INITIAL_STATE = {
   remainingMs: null, // set while paused / idle (full duration when idle)
   round: 0, // completed pomodoros since the last long break
   completedToday: 0,
+  totalCompleted: 0, // lifetime pomodoros finished (drives the rating prompt)
   today: null, // "YYYY-MM-DD" (local) that completedToday belongs to
 };

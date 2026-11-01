@@ -6,6 +6,6 @@
     "message": "Tomato Pop"
   },
   "appDesc": {
-    "message": "A Pomodoro timer that announces each session's end with a slide-in page banner and a live toolbar countdown. EN & JA."
+    "message": "Pomodoro timer that slides a banner onto your page when time is up (enable in Settings), plus a live countdown on the icon."
   }
 }

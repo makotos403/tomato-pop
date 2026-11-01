@@ -4,6 +4,11 @@
 
 import { resolveLang, loadMessages, makeT } from "./i18n.js";
 import { initSettings, localizeSettings, openSettings } from "./settings.js";
+import {
+  REVIEW_URL,
+  isReviewDue,
+  nextReview,
+} from "./review.js";
 
 const PHASE_LABEL = {
   pomodoro: "phase.work",
@@ -30,6 +35,12 @@ const el = {
   settings: document.getElementById("btn-settings"),
   popout: document.getElementById("btn-popout"),
   back: document.getElementById("btn-back"),
+  review: document.getElementById("review"),
+  reviewTitle: document.getElementById("review-title"),
+  reviewBody: document.getElementById("review-body"),
+  reviewRate: document.getElementById("review-rate"),
+  reviewLater: document.getElementById("review-later"),
+  reviewNever: document.getElementById("review-never"),
 };
 
 // "?w=1" -> this page is the detached pop-out window, not the toolbar dropdown.
@@ -126,8 +137,58 @@ function stopTick() {
   tickTimer = null;
 }
 
+// --- rating prompt (see review.js for the policy) ---
+
+// Set once the user answers; even if saving failed we never ask again this session.
+let reviewAnswered = false;
+
+async function loadReview() {
+  const { review } = await chrome.storage.local.get("review");
+  return review;
+}
+
+// Shown only in the dropdown, only while not running, only when due.
+// Any storage error means "stay hidden".
+async function renderReview(state) {
+  if (!el.viewSettings.hidden) return; // never cover the settings view
+  let show = false;
+  try {
+    show = !reviewAnswered && !windowMode && state.status !== "running" && isReviewDue(state.totalCompleted, await loadReview());
+  } catch (_) {
+    show = false;
+  }
+  if (show) {
+    const t = shared.t;
+    el.reviewTitle.textContent = t("review.title");
+    el.reviewBody.textContent = t("review.body");
+    el.reviewRate.textContent = t("review.rate");
+    el.reviewRate.href = REVIEW_URL;
+    el.reviewLater.textContent = t("review.later");
+    el.reviewNever.textContent = t("review.never");
+  }
+  el.review.hidden = !show;
+  el.viewTimer.hidden = show;
+}
+
+// Hide first, then record the choice; a failed write must not block the user.
+async function answerReview(answer) {
+  reviewAnswered = true;
+  try {
+    const { state } = await getSnapshot();
+    await chrome.storage.local.set({
+      review: nextReview(await loadReview(), answer, state.totalCompleted ?? 0),
+    });
+  } catch (_) {
+    /* not saved: the next popup may ask once more, this one will not */
+  }
+  el.review.hidden = true;
+  el.viewTimer.hidden = false;
+  refresh();
+}
+
 async function refresh() {
   const { state } = await getSnapshot();
+  await renderReview(state); // decide timer vs. rating view before drawing
   renderStatic(state);
   renderTick(state);
   stopTick();
@@ -206,6 +267,14 @@ el.reset.addEventListener("click", async () => {
   refresh();
 });
 
+el.reviewRate.addEventListener("click", async (e) => {
+  e.preventDefault(); // record the answer first; the new tab would close the popup
+  await answerReview("rate");
+  chrome.tabs.create({ url: REVIEW_URL });
+});
+el.reviewLater.addEventListener("click", () => answerReview("later"));
+el.reviewNever.addEventListener("click", () => answerReview("never"));
+
 el.settings.addEventListener("click", showSettings);
 el.back.addEventListener("click", showTimer);
 
@@ -216,7 +285,7 @@ el.popout.addEventListener("click", async () => {
 
 // react to background-driven changes (e.g. a phase ending while the popup is open)
 chrome.storage.local.onChanged.addListener((changes) => {
-  if ((changes.state || changes.settings) && !el.viewTimer.hidden) refresh();
+  if ((changes.state || changes.settings || changes.review) && el.viewSettings.hidden) refresh();
 });
 
 // --- boot ---

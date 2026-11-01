@@ -65,5 +65,13 @@
   "settings.langJa": "日本語",
   "settings.langEn": "English",
 
+  "settings.rateLink": "★ ストアで評価・レビューを書く",
+
+  "review.title": "トマトポップタイマーをご利用いただきありがとうございます",
+  "review.body": "もしお役に立てていましたら、ストアで評価をいただけると励みになります。よろしくお願いします。",
+  "review.rate": "評価する",
+  "review.later": "あとで",
+  "review.never": "今後表示しない",
+
   "permission.denied": "権限がないため、OS通知のみで案内します。"
 }

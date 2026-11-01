@@ -62,6 +62,14 @@ if (!window.__tomatoPopReady) {
           background: transparent; color: #3a3330;
           border: 1px solid #ded5cd;
         }
+        .review { margin-top: 12px; padding-top: 10px; border-top: 1px solid #ded5cd; }
+        .review[hidden] { display: none; }
+        .rv-text { font-size: 12px; line-height: 1.5; color: #8a817b; }
+        .rv-actions { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+        .rv-never {
+          margin-left: auto; border: 0; background: none; cursor: pointer;
+          font: inherit; font-size: 11px; color: #8a817b; text-decoration: underline;
+        }
         .close {
           border: 0; background: transparent; cursor: pointer;
           color: #8a817b; font-size: 18px; line-height: 1; padding: 0 2px;
@@ -73,6 +81,8 @@ if (!window.__tomatoPopReady) {
           .cta { background: #ede4dc; color: #2a2422; }
           .end { color: #ede4dc; border-color: #4a403b; }
           .close { color: #a79e97; }
+          .review { border-top-color: #4a403b; }
+          .rv-text, .rv-never { color: #a79e97; }
         }
       </style>
       <div class="wrap" role="alert">
@@ -83,6 +93,14 @@ if (!window.__tomatoPopReady) {
             <button class="btn cta"></button>
             <button class="btn end"></button>
           </div>
+          <div class="review" hidden>
+            <div class="rv-text"></div>
+            <div class="rv-actions">
+              <button class="btn cta rv-rate"></button>
+              <button class="btn end rv-later"></button>
+              <button class="rv-never"></button>
+            </div>
+          </div>
         </div>
         <button class="close" aria-label="close">&times;</button>
       </div>
@@ -92,6 +110,26 @@ if (!window.__tomatoPopReady) {
     root.querySelector(".cta").textContent = b.cta;
     root.querySelector(".end").textContent = b.end;
     root.querySelector(".close").setAttribute("aria-label", b.dismiss || "close");
+
+    // Optional rating ask (background decides whether it is due).
+    if (b.review) {
+      const rv = root.querySelector(".review");
+      root.querySelector(".rv-text").textContent = b.review.body;
+      root.querySelector(".rv-rate").textContent = b.review.rate;
+      root.querySelector(".rv-later").textContent = b.review.later;
+      root.querySelector(".rv-never").textContent = b.review.never;
+      rv.hidden = false;
+      for (const [cls, answer] of [
+        [".rv-rate", "rate"],
+        [".rv-later", "later"],
+        [".rv-never", "never"],
+      ]) {
+        root.querySelector(cls).addEventListener("click", () => {
+          rv.hidden = true; // hide first; the answer is recorded in the background
+          chrome.runtime.sendMessage({ type: "REVIEW_ANSWER", answer });
+        });
+      }
+    }
 
     document.documentElement.appendChild(host);
     const wrap = root.querySelector(".wrap");

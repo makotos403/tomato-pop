@@ -23,10 +23,10 @@ short_name は `__MSG_appNameShort__` = `Tomato Pop` / `トマトポップ`）
 英語を基準表現とし、日本語も並行で用意する。
 
 **EN（基準）**
-> A Pomodoro timer that announces each session's end with a slide-in page banner and a live toolbar countdown. EN & JA.
+> Pomodoro timer that slides a banner onto your page when time is up (enable in Settings), plus a live countdown on the icon.
 
 **JA**
-> ポモドーロの終了を、ページ上部のスライドインバナーとアイコンの残り時間表示で知らせる Chrome 拡張機能。日英対応。
+> 作業中のページの上にバナーでポモドーロの終了をお知らせ（設定でオン）。アイコンに残り時間も表示。日英対応。
 
 （`_locales/*/messages.json` の `appDesc` と同一）
 
@@ -37,33 +37,34 @@ short_name は `__MSG_appNameShort__` = `Tomato Pop` / `トマトポップ`）
 
 ## 3. 詳細な説明 / Detailed description
 
+構成：冒頭に「おすすめの設定：ページ内バナー」（初期設定はオフであることを明記）→ 切り離し窓 → 機能一覧 → プライバシー。
+設定画面の文言（`ページ内にバナーを表示` / `Show a banner on the page`）と一致させること。
+
 **JA**
 
 ```
 トマトポップタイマーは、ポモドーロ・テクニックのための集中タイマーです。
 
-■ 特徴：終了を「画面で」知らせる
-作業や休憩の時間が終わると、いま見ているページの上部からバナーがスライドで降りてきます。
-ツールバーのアイコンには残り時間が MM:SS でリアルタイム表示されるので、
-タイマーを開かなくても状況がわかります。
+■ おすすめの設定：ページ内バナー
+設定で「ページ内にバナーを表示」にチェックを入れると、
+時間が来たときに、見ているページの上からバナーがスライドして降りてきます。
+図書館・カフェ・会議中など、音を出せない場所に最適です。
+※ 初期設定はオフです。オンにすると、バナーを表示するためのアクセス許可を確認します。
+　ページの内容は読み取らず、保存も送信もしません。
 
 ■ タイマーを切り離して常に表示
 「↗」ボタンで、タイマーを小さな別ウィンドウに切り離せます。
 ツールバーのドロップダウンと違い、フォーカスが外れても消えません。
-作業しながら残り時間をいつでも確認できます（窓の高さは中身に合わせて自動調整）。
+作業しながら残り時間をいつでも確認できます。
 
 ■ できること
+・ツールバーのアイコンに、残り時間を MM:SS でリアルタイム表示
 ・ポモドーロ / 短い休憩 / 長めの休憩 の3つ。時間はすべて分単位で設定可能
-・長めの休憩は「使う / 使わない」を切り替え可能（短いインターバルを繰り返したい人向け）
+・長めの休憩は「使う / 使わない」を切り替え可能（初期設定はオフ）
 ・セッションの移行は手動。終了時に「次を開始」か「終了」を選ぶだけ
-・アイコンをクリックすると円形タイマー（赤い弧が時計回りに減っていく）
+・通知：OS通知（常時）／音（OS通知音・ソフトなチャイム・無音）／ページ内バナー
 ・日本語・英語対応。ブラウザの言語に自動追従、設定で切り替えも可能
 ・ライト / ダークはブラウザの設定に自動追従
-
-■ 通知方法（選べます）
-・OS通知（常時）
-・音：OS通知音 / ソフトなチャイム / 無音 から選択、音量調整あり
-・ページ内バナー：任意。オンにしたときだけ、表示中のページへのアクセス許可を求めます
 
 ■ プライバシー
 外部との通信は一切ありません。タイマーの状態と設定はお使いの端末内にのみ保存され、
@@ -75,28 +76,26 @@ short_name は `__MSG_appNameShort__` = `Tomato Pop` / `トマトポップ`）
 ```
 Tomato Pop Timer is a focus timer for the Pomodoro Technique.
 
-WHAT MAKES IT DIFFERENT — it tells you on the screen
-When a focus or break interval ends, a compact banner slides down from the top of
-the page you're on. The toolbar icon also shows the time left as a live MM:SS
-countdown, so you always know where you are without opening the timer.
+RECOMMENDED SETTING: PAGE BANNER
+Check "Show a banner on the page" in Settings, and when time is up a banner slides
+down from the top of the page you're viewing.
+Perfect for libraries, cafés, or meetings, where you can't use sound.
+Note: it is off by default. Turning it on asks for permission to show the banner.
+The extension never reads, stores, or sends page content.
 
 KEEP THE TIMER ON SCREEN
-The "↗" button detaches the timer into a small window. Unlike the toolbar
-dropdown, it doesn't disappear when it loses focus, so you can keep an eye on the
-time remaining while you work. The window auto-fits its height to the content.
+The "↗" button detaches the timer into a small window. Unlike the toolbar dropdown,
+it doesn't disappear when it loses focus, so you can check the time remaining
+while you work.
 
 FEATURES
-- Pomodoro / short break / long break, each length adjustable in minutes
-- The long break can be turned off entirely (handy for short, repeated intervals)
-- Manual transitions: when an interval ends you choose "start next" or "done"
-- Click the icon for a circular timer (a red arc that winds down clockwise)
+- Live MM:SS countdown on the toolbar icon
+- Pomodoro / short break / long break, each adjustable in minutes
+- The long break can be turned on or off (off by default)
+- Manual transitions: when an interval ends, choose "start next" or "done"
+- Alerts: system notification (always), sound (system sound / soft chime / silent), page banner
 - English and Japanese; follows your browser language, switchable in settings
 - Light / dark follows your browser setting
-
-HOW IT NOTIFIES YOU (your choice)
-- System notification (always)
-- Sound: system sound / a soft chime / silent, with a volume control
-- In-page banner: optional. Turning it on asks for access to the page you're viewing
 
 PRIVACY
 No external connections at all. The timer state and your settings are stored only
@@ -185,7 +184,32 @@ Dashboard の「プライバシー」タブで各権限に入力。英語推奨�
 ## 8. 提出用 zip
 
 ```
-cd D:\Create\Tools\tomato-pop
+cd D:\Create\Tools\chrome-extensions\tomato-pop
 zip -r ../tomato-pop-v<version>.zip . \
   -x 'dev/*' '.git/*' '*.md' 'LICENSE' '.gitignore' '.gitattributes' '*.zip'
 ```
+
+---
+
+## 9. v1.3.0 更新の提出メモ
+
+zip：`D:\Create\Tools\chrome-extensions\tomato-pop-v1.3.0.zip`（`manifest.json` の version は 1.3.0。`dev/` `*.md` などは除外済み）
+
+Dashboard で「パッケージ」→「新しいパッケージをアップロード」→ 次を貼り替えて「審査用に送信」：
+
+| タブ | やること |
+|---|---|
+| ストアの掲載情報 | 「詳細な説明」を **§3 の JA / EN** に差し替え（日本語・English それぞれ）。「概要」は zip の `appDesc` から自動で変わる（§2） |
+| プライバシー | **変更なし**（権限の追加なし。新しく保存するのは累計の完了回数と評価依頼への回答状況で、いずれも端末内のみ・外部送信なし。「データを収集しない」のまま） |
+| 配布 | 変更なし |
+| スクリーンショット | 変更なし（#4 の設定画面は「長め休憩トグル ON」のまま。初期設定はオフになったが機能紹介としては問題なし） |
+
+v1.3.0 の変更点（審査メモ用・英語）：
+
+> - Added a polite, one-time request to rate the extension (never shown while the timer is running; "Don't show again" is always available; no incentives).
+> - The long break is now off by default.
+> - Updated the store description to explain the optional in-page banner.
+> - No new permissions.
+
+承認後：`git tag v1.3.0 && git push --tags`、`../CLAUDE.md` のツール一覧と README のバージョンを更新（§10.6）。
+
